@@ -23,6 +23,7 @@ __pycache__/
 # 临时文件
 **/temp/
 *tmp
+.DS_Store
 
 # 输出目录
 **/output/

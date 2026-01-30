@@ -1,0 +1,30 @@
+train:
+  model_path: ./models/Qwen/Qwen2___5-7B-Instruct
+  train_data_path: ./dataset/processed/medical_train.jsonl
+  eval_data_path: ./dataset/processed/medical_dev.jsonl
+  test_data_path: ./dataset/processed/medical_test.jsonl
+  output_dir: ./output
+  model_type: qwen
+  input_max_length: 214
+  output_max_length: 98
+  train_batch_size: 1
+  eval_batch_size: 8
+  epochs: 5
+  eval_steps: 500
+  lr: 5.e-5
+  seed: 123
+  do_train: false
+  output_entity_scores: true
+  peft_model_path: ./output/best_rouge_l
+peft:
+  peft_type: lora
+  lora_config:
+    r: 4
+    lora_alpha: 8
+    lora_dropout: 0.05
+#    target_modules: ["query_key_value","dense","dense_h_to_4h","dense_4h_to_h"]
+    target_modules: ["q_proj","k_proj","v_proj","o_proj","gate_proj","up_proj","down_proj"]
+  ptuning_config:
+    num_virtual_tokens: 10
+    encoder_reparameterization_type: MLP
+

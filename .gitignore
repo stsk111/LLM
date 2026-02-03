@@ -1,0 +1,40 @@
+# IDE
+**/.vscode/
+
+
+# Python
+__pycache__/
+
+# 环境变量
+.env
+
+# 模型文件
+**/models/*
+!**/models/.gitkeep
+*.ckpt
+*.pth
+*.bin
+*.safetensors
+*.onnx
+
+# 缓存目录
+.cache/
+*.pkl
+
+
+# 临时文件
+**/temp/
+*tmp
+.DS_Store
+
+# 输出目录
+**/output/
+
+# 日志
+**/logs/
+*.log
+
+# 清理脚本
+*cleanup.sh
+
+

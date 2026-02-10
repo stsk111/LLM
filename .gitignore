@@ -1,5 +1,5 @@
 # IDE
-**/.vscode/
+.vscode/
 
 
 # Python
@@ -9,8 +9,8 @@ __pycache__/
 .env
 
 # 模型文件
-**/models/*
-!**/models/.gitkeep
+models/*
+!/models/.gitkeep
 *.ckpt
 *.pth
 *.bin
@@ -23,15 +23,15 @@ __pycache__/
 
 
 # 临时文件
-**/temp/
+temp/
 *tmp
 .DS_Store
 
 # 输出目录
-**/output/
+output/
 
 # 日志
-**/logs/
+logs/
 *.log
 
 # 清理脚本

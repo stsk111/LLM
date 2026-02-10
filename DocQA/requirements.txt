@@ -12,3 +12,6 @@ rank-bm25
 pypdf 
 gradio 
 
+rouge-score 
+nltk
+jieba

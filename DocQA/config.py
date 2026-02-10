@@ -2,9 +2,8 @@
 DocQA Pro - 配置文件
 统一管理模型路径、参数配置等
 """
-import os
 from pathlib import Path
-from typing import Dict, Any
+
 
 # 项目根目录
 PROJECT_ROOT = Path(__file__).parent.absolute()
@@ -47,6 +46,7 @@ SPARSE_WEIGHT = 0.5  # BM25检索权重
 RETRIEVAL_TOP_K = 10  # 初始召回数量
 
 # 重排参数
+EVAL_ENABLE_RERANK = False
 RERANK_TOP_N = 5  # 重排后保留的数量
 RERANK_SCORE_THRESHOLD = 0.0  # 相关性分数阈值，低于此值的结果将被过滤
 
@@ -111,101 +111,6 @@ LOG_LEVEL = "INFO"  # 'DEBUG', 'INFO', 'WARNING', 'ERROR'
 LOG_DIR = PROJECT_ROOT / "logs"
 
 # ==================== 评估配置 ====================
-EVAL_DATA_DIR = PROJECT_ROOT / "evals" / "data"
-EVAL_REPORTS_DIR = PROJECT_ROOT / "evals" / "reports"
+EVAL_SIMILARITY_THRESHOLD = 0.8
+EVAL_MRR_MAX_DEPTH = 20
 
-# 性能指标目标
-TARGET_TTFT = 1.5  # 首字延迟目标（秒）
-TARGET_TOKENS_PER_SEC = 50  # 生成速度目标（tokens/秒）
-TARGET_RETRIEVAL_TIME = 0.5  # 检索耗时目标（秒）
-
-# 质量指标目标
-TARGET_RECALL_AT_5 = 0.90  # Recall@5 目标
-TARGET_REJECTION_ACCURACY = 0.95  # 拒答准确率目标
-TARGET_HALLUCINATION_RATE = 0.05  # 幻觉率目标上限
-
-
-def get_config() -> Dict[str, Any]:
-    """
-    获取完整配置字典
-    
-    Returns:
-        包含所有配置项的字典
-    """
-    return {
-        "project_root": PROJECT_ROOT,
-        "models": {
-            "llm": str(LLM_MODEL_PATH),
-            "embedding": str(EMBEDDING_MODEL_PATH),
-            "reranker": str(RERANKER_MODEL_PATH),
-        },
-        "chunk_config": {
-            "size": CHUNK_SIZE,
-            "overlap": CHUNK_OVERLAP,
-        },
-        "retrieval_config": {
-            "top_k": RETRIEVAL_TOP_K,
-            "rerank_top_n": RERANK_TOP_N,
-            "score_threshold": RERANK_SCORE_THRESHOLD,
-        },
-        "sampling_params": SAMPLING_PARAMS,
-    }
-
-
-def validate_config() -> bool:
-    """
-    验证配置的有效性，检查必要的路径和文件是否存在
-    
-    Returns:
-        配置是否有效
-    """
-    errors = []
-    
-    # 检查模型目录
-    if not MODELS_DIR.exists():
-        errors.append(f"模型目录不存在: {MODELS_DIR}")
-    
-    # 检查各个模型路径
-    model_paths = {
-        "LLM模型": LLM_MODEL_PATH,
-        "Embedding模型": EMBEDDING_MODEL_PATH,
-        "Reranker模型": RERANKER_MODEL_PATH,
-    }
-    
-    for name, path in model_paths.items():
-        if not path.exists():
-            errors.append(f"{name}路径不存在: {path}")
-    
-    # 创建必要的目录
-    for directory in [CACHE_DIR, LOG_DIR, EVAL_DATA_DIR, EVAL_REPORTS_DIR]:
-        directory.mkdir(parents=True, exist_ok=True)
-    
-    if errors:
-        print("⚠️  配置验证失败:")
-        for error in errors:
-            print(f"  - {error}")
-        return False
-    
-    print("✅ 配置验证通过")
-    return True
-
-
-if __name__ == "__main__":
-    # 测试配置
-    print("=" * 50)
-    print("DocQA Pro 配置信息")
-    print("=" * 50)
-    
-    config = get_config()
-    for key, value in config.items():
-        print(f"\n[{key}]")
-        if isinstance(value, dict):
-            for k, v in value.items():
-                print(f"  {k}: {v}")
-        else:
-            print(f"  {value}")
-    
-    print("\n" + "=" * 50)
-    print("配置验证")
-    print("=" * 50)
-    validate_config()
